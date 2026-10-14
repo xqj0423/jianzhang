@@ -51,7 +51,7 @@ function readableError(e){return e?.name==='AbortError'?'连接超时，请检�
 async function stateRequest(options={}){const control=new AbortController(),timer=setTimeout(()=>control.abort(),15000);try{return await fetch('/api/state',{...options,signal:control.signal});}finally{clearTimeout(timer);}}
 async function loadOnline(){
   setSyncState('loading',ready?'正在刷新账本…':'正在读取账本…');
-  const res=await stateRequest({cache:'no-store'});if(res.status===401){location.replace('/');throw Error('请重新输入账本密码');}if(!res.ok)throw Error('读取在线账本失败');
+  const res=await stateRequest({cache:'no-store'});if(res.status===401){location.replace('/');throw Error('请重新使用邮箱登录');}if(!res.ok)throw Error('读取在线账本失败');
   const result=await res.json();if(!valid(result.db))throw Error('在线账本格式异常');db=normalizeCategories(result.db);committedDb=JSON.parse(JSON.stringify(db));revision=result.revision;ready=true;saveOK=true;document.body.classList.remove('booting');setSyncState('ready','已同步');
   $('initial').value=(db.initial/100).toFixed(2);$('syncStatus').textContent='云端已同步';render();
 }

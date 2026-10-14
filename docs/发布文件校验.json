@@ -16,19 +16,14 @@
       "sha256": "de0691f4be092303fa60efd8370e3bd757f8c7a6dee2e39e2ebe6737bfcb17f4"
     },
     {
-      "file": "README.md",
-      "bytes": 7363,
-      "sha256": "e308bb29d68e56c495149f26342a5d9414b7bf6ab57674b479aba3cfa062b875"
-    },
-    {
       "file": "api/index.mjs",
       "bytes": 306,
       "sha256": "0525d14e11053ca714fdcc0b7aeae91d229b509152b5c99e2917aa4a3ac2d590"
     },
     {
       "file": "backend/.env.example",
-      "bytes": 306,
-      "sha256": "0f8c73156e324e52d75b3c811ba96c61f738028822bbb7a8247f6d5170f30029"
+      "bytes": 331,
+      "sha256": "e9d6d96d0c88567a540a129133049b7b5fd007209605910d0871bdd9ef20f0fe"
     },
     {
       "file": "backend/build.mjs",
@@ -37,8 +32,8 @@
     },
     {
       "file": "backend/package.json",
-      "bytes": 471,
-      "sha256": "f9fe605ea56f67f92ac29e63159829f6b8cbf5a3040c71112763de9c00699614"
+      "bytes": 476,
+      "sha256": "b3ba9122ab12c75239d157363e7159d47ffdd541bef1d5406df897f1921da938"
     },
     {
       "file": "backend/scf_bootstrap",
@@ -56,34 +51,39 @@
       "sha256": "cdd3a818db126f018f79d404df3bbd7507eb4a4dd8d0c1d89abb40a3c5ba82f9"
     },
     {
+      "file": "backend/src/api/login-request/route.ts",
+      "bytes": 1550,
+      "sha256": "3d080d66406eeb62011937c2819173c39c95fabdd5691a79a843f6e498c2c804"
+    },
+    {
+      "file": "backend/src/api/login-verify/route.ts",
+      "bytes": 1296,
+      "sha256": "51f15f31fb05d5119c8eed806cc1447446512eca3a45c82547ebccdf0344838c"
+    },
+    {
       "file": "backend/src/api/recognize/route.ts",
       "bytes": 567,
       "sha256": "2ca710eef7a6217ea27fffbadd2cf7e218614a3ed676e2ee82fdbfad517d0548"
     },
     {
       "file": "backend/src/api/record/route.ts",
-      "bytes": 3622,
-      "sha256": "e1cc820d90572a1c76d89be0f1cdc42a5de62ff9ad19a22b26be68183dee012c"
+      "bytes": 3643,
+      "sha256": "0750d27ecb50be2cd8aa6ebb5097d3ee70475d6556254cf383bce17c35b5e303"
     },
     {
       "file": "backend/src/api/shortcut-config/route.ts",
-      "bytes": 774,
-      "sha256": "2ecbfb98d9f0ed5586e2cf2f4be96b64f928cceba9a77e2e62b0c2a73f77960d"
+      "bytes": 700,
+      "sha256": "03c335400849a67f3c5099d7db33b4d460e6a6163c93ab1c5e3684fa4a0d708e"
     },
     {
       "file": "backend/src/api/state/route.ts",
-      "bytes": 1106,
-      "sha256": "38b046f69229b43bfa076b83f0477a110bf0a2c7c254edb0d3ff3782d27ea563"
-    },
-    {
-      "file": "backend/src/api/unlock/route.ts",
-      "bytes": 1200,
-      "sha256": "e2e50c461627ffc441f620ff9f545dd4e3bcadcb4125d57c249a2fad33926af1"
+      "bytes": 1117,
+      "sha256": "18d098f586f81ed920a9189c7955e8c9a1eb9f4b5cbb7b0e925a982ec6a76892"
     },
     {
       "file": "backend/src/book-access.ts",
-      "bytes": 4281,
-      "sha256": "0ffae21e592270b1bbb0e83c4fbc424d436b68516138bea00ec411ed9cdcc0c6"
+      "bytes": 6633,
+      "sha256": "b730514565fc54198a4040fe5ad46e9904cdccf54254fc845c36950db6fde0b1"
     },
     {
       "file": "backend/src/cloud-env.ts",
@@ -92,13 +92,18 @@
     },
     {
       "file": "backend/src/database.ts",
-      "bytes": 2296,
-      "sha256": "72d080d83f6dfb619ccd442a49b5d2e7326188d5c11ad9e3b12b5c3be43643e0"
+      "bytes": 3607,
+      "sha256": "cae9384365177c043aede93a488e7a1f2b70c46ecedd15ff81b9b89fe1a4e3a0"
     },
     {
       "file": "backend/src/ledger-store.ts",
-      "bytes": 2874,
-      "sha256": "d0c382d0137f929221dfd8f6b9734888c4a33c6768c875c44a583e47493ac269"
+      "bytes": 2905,
+      "sha256": "a37a6e3c0b84ea4c5d2c942e69629f42f1431959b443e9172062535ec8d67f8e"
+    },
+    {
+      "file": "backend/src/mailer.ts",
+      "bytes": 707,
+      "sha256": "cd7ce53541dcf399969b74da8ab6f6a264091168a6fe0f9a6dea06d16f1a0b34"
     },
     {
       "file": "backend/src/recognize.ts",
@@ -112,8 +117,8 @@
     },
     {
       "file": "backend/src/server.ts",
-      "bytes": 3775,
-      "sha256": "eb96af024269ec16e2ed1504321880312f94648533dc91fee4c3ec54debee961"
+      "bytes": 4153,
+      "sha256": "0badb46e56e1233aadd5670cecdda324e172483407200eec7eb4f9823b62ecac"
     },
     {
       "file": "backend/src/shortcut-help/route.ts",
@@ -121,49 +126,44 @@
       "sha256": "1ba0fc764dca1bfd885225ef0779c3eabe54967aa44f5ad5a3b2f7252ea88357"
     },
     {
-      "file": "backend/test/auth.test.mjs",
-      "bytes": 1363,
-      "sha256": "3164d1fed452f0bbd3771fc28956698a267d8002a672f1889ba0dfe7a95c3d49"
+      "file": "backend/test/multiuser.test.mjs",
+      "bytes": 8991,
+      "sha256": "1fe694d899d31b9a4f880a55248bfe814b80a7688552b89dd2b2890eb6911062"
+    },
+    {
+      "file": "CHANGES.md",
+      "bytes": 3697,
+      "sha256": "870400abc7aaf34a3d9f6e507326cd4eb6fc8f7c02b0427874095addc9c97ca8"
     },
     {
       "file": "data/ledger.html",
       "bytes": 84916,
-      "sha256": "b6c84a30edaf136858f11aed391bff36270e41feede4af62de5838e9b8386fe8"
-    },
-    {
-      "file": "docs/上传前检查清单.md",
-      "bytes": 3067,
-      "sha256": "46ac712b6652a01b937e6120fae7cc6af3e57efa9ecb2171a4d5d7eca6a04a3d"
+      "sha256": "e32114a6df331c31fa68249262d6965819a92d82089d41f5ac3da7d218687199"
     },
     {
       "file": "docs/敏感内容检查报告.md",
-      "bytes": 4575,
-      "sha256": "6ac52370b20cb5d745f043c4ebe34309413774382178b8140479be21f27ce786"
+      "bytes": 4612,
+      "sha256": "4dd6ef4aca28b8583129a1a288e610925e11457f4805ff7956c31e7c6a1bc9ed"
+    },
+    {
+      "file": "docs/上传前检查清单.md",
+      "bytes": 3128,
+      "sha256": "ac62618ce57c292033348822a46efc5adfc3fb75933df8deeca06dddd4b8c46f"
     },
     {
       "file": "docs/文件结构.md",
-      "bytes": 1592,
-      "sha256": "d2827c300ef2891adfdef343c118382f295188bfc80a149f944c8a8597efbed0"
+      "bytes": 1636,
+      "sha256": "3f39a7196d04415695826d0283d97a6fd9abc93c67367d5efde910894ecc0f98"
     },
     {
       "file": "lib/handler.mjs",
-      "bytes": 5309,
-      "sha256": "7b55d5118c2423b5327385ea116445382ad0890061e8bd3d2e5bf3f93a9aa029"
+      "bytes": 5379,
+      "sha256": "ce0f4da26b097dbb5201804569345925dcce683357ee84513d83ff077ece2600"
     },
     {
       "file": "package.json",
       "bytes": 312,
       "sha256": "637d7be077b2d9587f56de3746e24dd76d28dc11dc28f5d80ad88b8708ee29b9"
-    },
-    {
-      "file": "public/assets/gsap-3.15.0/ScrollTrigger.min.js",
-      "bytes": 44575,
-      "sha256": "b0b14d67b55b0c43c756ac0b106cfcb09d0879945f6ead64451065b0672916a2"
-    },
-    {
-      "file": "public/assets/gsap-3.15.0/THIRD_PARTY_NOTICE.txt",
-      "bytes": 304,
-      "sha256": "5f0663b897793e986f2830387a108d3f0e4f82da6d8100c07bf5f41edcc6bd02"
     },
     {
       "file": "public/assets/gsap-3.15.0/gsap.min.js",
@@ -176,9 +176,24 @@
       "sha256": "6462cd944c65e3b3a646553907c7af35e338c9b1cc49c1447d0a10bea629df3c"
     },
     {
+      "file": "public/assets/gsap-3.15.0/ScrollTrigger.min.js",
+      "bytes": 44575,
+      "sha256": "b0b14d67b55b0c43c756ac0b106cfcb09d0879945f6ead64451065b0672916a2"
+    },
+    {
+      "file": "public/assets/gsap-3.15.0/THIRD_PARTY_NOTICE.txt",
+      "bytes": 304,
+      "sha256": "5f0663b897793e986f2830387a108d3f0e4f82da6d8100c07bf5f41edcc6bd02"
+    },
+    {
       "file": "public/assets/ledger-motion-v4.js",
       "bytes": 4744,
       "sha256": "b69ff79f4ca7b000b31d97f2838f0a6082df7aaa07a48a339729862ab0e5ce72"
+    },
+    {
+      "file": "README.md",
+      "bytes": 8951,
+      "sha256": "d62cbfa0835b7bbda5c426274f1f8b5bc49fe6df8afebc5419b3bac7f3794aa5"
     },
     {
       "file": "scripts/check-public.mjs",
@@ -196,19 +211,24 @@
       "sha256": "fe1524375cd926bca0a4de792a51be294d498cdc33a3bede978eeafd85e6ebb9"
     },
     {
-      "file": "shortcut/README.md",
-      "bytes": 710,
-      "sha256": "443f5ac5dbd72dd8c10e06784fc79fcf499211e94393ccf749247cfeb524480f"
-    },
-    {
       "file": "shortcut/build.py",
       "bytes": 6348,
       "sha256": "0b6457777c7331f41e1180312f6956d60b2af5a72eb91b07ff14f78eb985368e"
     },
     {
+      "file": "shortcut/README.md",
+      "bytes": 710,
+      "sha256": "443f5ac5dbd72dd8c10e06784fc79fcf499211e94393ccf749247cfeb524480f"
+    },
+    {
       "file": "test/handler.test.mjs",
-      "bytes": 5103,
-      "sha256": "7077ce9240078ee679f798c42a71a8be71f9d10b715162e70f1019e5a912d1ed"
+      "bytes": 5130,
+      "sha256": "d1a705a96356f1ecc3a030dc4f48eea75ec95baaa210bfc1426127f47bc9b731"
+    },
+    {
+      "file": "test/login-proxy.test.mjs",
+      "bytes": 1291,
+      "sha256": "fb682ad9f02e84e45797e5e0f2c9547472ef3b64194af9b9e1db6081aae151fd"
     },
     {
       "file": "test/public-config.test.mjs",
@@ -217,9 +237,8 @@
     },
     {
       "file": "vercel.json",
-      "bytes": 751,
-      "sha256": "a3bf40616033285f1ae4d7adf1ee94e1f4995b4312dd6b8abb5eede61a54a735"
+      "bytes": 941,
+      "sha256": "f1364c7603e2e93d1bd939c042343e1fb13ee7f22513c5c2c37aa9559b8c4105"
     }
-  ],
-  "note": "此清单不对自身做循环校验"
+  ]
 }

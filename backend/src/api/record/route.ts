@@ -3,7 +3,7 @@ import {shortcutAccess} from '../../book-access';
 import {recognize} from '../../recognize';
 export const dynamic='force-dynamic';
 // Public page; the shortcut write token authorizes only this append-only route.
-export async function POST(req:Request){if(!shortcutAccess(req))return json({saved:false,error:'快捷指令连接密钥无效'},401);try{
+export async function POST(req:Request){const uid=shortcutAccess(req);if(!uid)return json({saved:false,error:'快捷指令连接密钥无效'},401);try{
   if(!req.headers.get('content-type')?.includes('application/json'))return json({saved:false,error:'请发送 JSON'},415);
   const text=await req.text();if(text.length>12000)return json({saved:false,error:'请求过大'},413);
   const v=JSON.parse(text);const amt=String(v.amount??'').trim().replace(/[,，¥￥元\s]/g,'');
@@ -24,6 +24,6 @@ export async function POST(req:Request){if(!shortcutAccess(req))return json({sav
   const dt=typeof v.date==='string'?v.date:new Date(Date.now()+8*3600000).toISOString().slice(0,19).replace('T',' ');
   const row={id:'shortcut-'+v.request_id,date:dt,type:v.type,cents,party:typeof v.party==='string'?v.party:'',note:typeof v.note==='string'?v.note:'',source:v.source,tx:typeof v.tx==='string'?v.tx:'',category:classify((v.party||'')+' '+(v.note||''),v.type)};
   if(!validRow(row))return json({saved:false,error:'记录格式无效'},400);
-  for(let i=0;i<5;i++){const current=await readLedger(),old=current.db.rows.find(r=>r.id===row.id);if(old){if(old.cents!==row.cents||old.type!==row.type||old.source!==row.source)return json({saved:false,error:'请求编号已用于另一笔记录'},409);return json({saved:true,save_status:'saved',duplicate:true,id:old.id});}if(current.db.rows.length>=30000)return json({saved:false,error:'账本已满，请先归档'},413);current.db.rows.push(row);if(await writeLedger(current.db,current.revision))return json({saved:true,save_status:'saved',duplicate:false,id:row.id},201);}
+  for(let i=0;i<5;i++){const current=await readLedger(uid),old=current.db.rows.find(r=>r.id===row.id);if(old){if(old.cents!==row.cents||old.type!==row.type||old.source!==row.source)return json({saved:false,error:'请求编号已用于另一笔记录'},409);return json({saved:true,save_status:'saved',duplicate:true,id:old.id});}if(current.db.rows.length>=30000)return json({saved:false,error:'账本已满，请先归档'},413);current.db.rows.push(row);if(await writeLedger(uid,current.db,current.revision))return json({saved:true,save_status:'saved',duplicate:false,id:row.id},201);}
   return json({saved:false,error:'账本正忙，请使用相同 request_id 重试'},409);
 }catch{return json({saved:false,error:'在线记账失败，请保留截图并重试'},503);}}
