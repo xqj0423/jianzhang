@@ -23,22 +23,26 @@ await build({
  export * as capture from './src/api/capture/route';
  export * as config from './src/api/shortcut-config/route';
  export * as requestCode from './src/api/login-request/route';
- export * as verifyCode from './src/api/login-verify/route';`,resolveDir:process.cwd(),loader:'ts'},
+ export * as verifyCode from './src/api/login-verify/route';
+ export * as users from './src/api/admin/users/route';
+ export * as account from './src/api/account/route';`,resolveDir:process.cwd(),loader:'ts'},
  outfile:'generated/multiuser.mjs',bundle:true,platform:'node',format:'esm',
  plugins:[{name:'memory-cloudbase',setup(b){
   b.onResolve({filter:/^@cloudbase\/node-sdk$/},()=>({path:'mock-sdk',namespace:'fixture'}));
   b.onLoad({filter:/.*/,namespace:'fixture'},()=>({contents:`
    const docs=globalThis.__fixtureDocuments;let tail=Promise.resolve();
-   const collection=name=>({doc(id){const key=name+'/'+id;return {
+   const command={gt:a=>({test:x=>x>a,and(other){return {test:x=>x>a&&other.test(x)}}}),lt:a=>({test:x=>x<a})};
+   const query=(name,condition)=>{let maximum=100;const all=()=>[...docs.entries()].filter(([key])=>key.startsWith(name+'/')).map(([key,value])=>({...structuredClone(value),_id:key.slice(name.length+1)})).filter(v=>condition._id.test(v._id)).sort((a,b)=>a._id.localeCompare(b._id));return {orderBy(){return this},limit(n){maximum=n;return this},async get(){return {data:all().slice(0,maximum)}},async count(){return {total:all().length}}}};
+   const collection=name=>({where:condition=>query(name,condition),doc(id){const key=name+'/'+id;return {
     async get(){return {data:docs.has(key)?[structuredClone(docs.get(key))]:[]}},
     async set(value){docs.set(key,structuredClone(value))},
     async remove(){docs.delete(key)}
    }}});
-   const database={collection,runTransaction(fn){const next=tail.then(()=>fn({collection}));tail=next.catch(()=>{});return next}};
+   const database={collection,command,runTransaction(fn){const next=tail.then(()=>fn({collection}));tail=next.catch(()=>{});return next}};
    export default {init:()=>({database:()=>database})};`,loader:'js'}));
  }}]
 });
-const {auth,database,store,state,record,capture,config,requestCode,verifyCode}=await import('../generated/multiuser.mjs');
+const {auth,database,store,state,record,capture,config,requestCode,verifyCode,users,account}=await import('../generated/multiuser.mjs');
 const origin='https://fixture.example';
 const owner='owner',alice=auth.userIdFor('alice@example.com'),bob=auth.userIdFor('bob@example.com');
 const empty=()=>({version:1,initial:0,rows:[]});
@@ -125,4 +129,29 @@ test('concurrent code use succeeds once and concurrent wrong guesses cannot bypa
  await seedCode('alice@example.com','123456',Date.now()-1);
  assert.equal((await verifyCode.POST(login('alice@example.com','123456'))).status,400);
  assert.equal((await verifyCode.POST(new Request(origin+'/api/login-verify',{method:'POST',headers:{origin:'https://wrong.example'},body:'{}'}))).status,403);
+});
+
+test('verified logins record accounts once, preserving first time and excluding failed verification',async()=>{
+ const email='tracked@example.com',id=auth.userIdFor(email),profile='jianzhang_access/user:'+id;
+ assert.equal((await verifyCode.POST(login(email,'000000'))).status,400);assert.equal(documents.has(profile),false);
+ await seedCode(email);assert.equal((await verifyCode.POST(login(email,'123456'))).status,200);
+ const first=structuredClone(documents.get(profile));assert.equal(first.email,email);assert.ok(first.firstRecordedAt>0);
+ await Promise.all([database.recordUserLogin(id,email,first.lastLoginAt+1000),database.recordUserLogin(id,email,first.lastLoginAt+500)]);
+ assert.equal(documents.get(profile).firstRecordedAt,first.firstRecordedAt);assert.equal(documents.get(profile).lastLoginAt,first.lastLoginAt+1000);
+});
+
+test('user directory is owner-only, paginated, read-only and never returns ledger data or secrets',async()=>{
+ assert.equal((await account.GET(new Request(origin+'/api/account'))).status,401);
+ assert.deepEqual(await (await account.GET(await browserRequest('/api/account',alice))).json(),{isOwner:false});
+ assert.deepEqual(await (await account.GET(await browserRequest('/api/account',owner))).json(),{isOwner:true});
+ assert.equal((await users.GET(new Request(origin+'/api/admin/users'))).status,401);
+ assert.equal((await users.GET(await browserRequest('/api/admin/users',alice))).status,403);
+ assert.equal((await users.GET(new Request(origin+'/api/admin/users',{headers:{authorization:'Bearer '+auth.shortcutToken(owner)}}))).status,401);
+ for(const query of ['?limit=51','?limit=0','?after=bad','?limit=NaN'])assert.equal((await users.GET(await browserRequest('/api/admin/users'+query,owner))).status,400);
+ const snapshot=structuredClone([...documents]);let next='',seen=[];let total;
+ do{const response=await users.GET(await browserRequest('/api/admin/users?limit=1'+(next?'&after='+next:''),owner));assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');const body=await response.json();seen.push(...body.users);total=body.total;next=body.nextCursor||'';}while(next);
+ assert.equal(seen.length,total);assert.equal(new Set(seen.map(v=>v.email)).size,total);
+ assert.ok(seen.some(v=>v.email==='owner@example.com'&&v.isOwner));
+ for(const user of seen)assert.deepEqual(Object.keys(user).sort(),['email','firstRecordedAt','isOwner','lastLoginAt'].sort());
+ assert.deepEqual([...documents],snapshot);
 });

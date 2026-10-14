@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import {createHandler} from '../lib/handler.mjs';
 const host='https://jianzhang.example',upstream='https://upstream.example';
 const setup=(fetchImpl)=>createHandler({html:'<html>ledger</html>',shortcut:new Uint8Array([65,69,65,49]),upstream,fetchImpl,publicAccess:true});
+
+test('owner directory proxy forwards pagination and cookie; preserves forbidden response',async()=>{
+ const handle=setup(async(url,options)=>{assert.equal(String(url),upstream+'/api/admin/users?after=owner&limit=30');assert.equal(options.headers.get('cookie'),'fixture-cookie');return Response.json({error:'forbidden'},{status:403});});
+ const response=await handle(new Request(host+'/api/index?__route=/api/admin/users&after=owner&limit=30&unsafe=ignored',{headers:{cookie:'fixture-cookie'}}));assert.equal(response.status,403);assert.equal(response.headers.get('cache-control'),'no-store');
+});
 test('homepage and signed shortcut are served locally; no database request',async()=>{
  const handle=setup(()=>{throw Error('Must not fetch');});
  const home=await handle(new Request(host+'/api/index?__route=/'));

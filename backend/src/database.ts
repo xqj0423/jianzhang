@@ -48,6 +48,24 @@ export async function getAccessDoc(id:string){return value(await db.collection(a
 export async function setAccessDoc(id:string,data:any){await db.collection(accessCollection).doc(id).set(data);}
 export async function removeAccessDoc(id:string){await db.collection(accessCollection).doc(id).remove();}
 
+// Keep verified account metadata separate from ledger payloads and login-code documents.
+export async function recordUserLogin(uid:string,email:string,now:number){
+if(!/^(owner|[a-f0-9]{24})$/.test(uid))throw Error('Invalid user id');
+return db.runTransaction(async(t:any)=>{
+const ref=t.collection(accessCollection).doc('user:'+uid),old=value(await ref.get());
+await ref.set({kind:'user-profile',uid,email,firstRecordedAt:old?.firstRecordedAt||now,lastLoginAt:Math.max(old?.lastLoginAt||0,now)});
+});
+}
+export async function listUserProfiles(after:string,limit:number){
+const range=(start:string)=>({_id:db.command.gt(start).and(db.command.lt('user;'))});
+const [result,count]=await Promise.all([
+db.collection(accessCollection).where(range(after?'user:'+after:'user:')).orderBy('_id','asc').limit(limit+1).get(),
+db.collection(accessCollection).where(range('user:')).count()
+]);
+const docs=Array.isArray(result.data)?result.data:[];
+return {users:docs.slice(0,limit).map((v:any)=>({email:v.email,firstRecordedAt:v.firstRecordedAt,lastLoginAt:v.lastLoginAt,isOwner:v.uid==='owner'})),total:count.total,nextCursor:docs.length>limit?docs[limit-1].uid:null};
+}
+
 // Consume and count guesses in one transaction: concurrent requests cannot reuse a code.
 export async function consumeLoginCode(id:string,expectedHash:string,now:number){
 return db.runTransaction(async(t:any)=>{
