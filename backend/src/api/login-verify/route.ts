@@ -1,4 +1,4 @@
-import {consumeLoginCode,incrementLimit} from '../../database';
+import {consumeLoginCode,incrementLimit,recordUserLogin} from '../../database';
 import {json,sameOrigin} from '../../ledger-store';
 import {normalizeEmail,emailKey,codeHash,rateKey,userIdFor,sessionCookie} from '../../book-access';
 export const dynamic='force-dynamic';
@@ -13,6 +13,7 @@ const g=await incrementLimit('verifyip:'+await rateKey(req),now,15*60000);if(!g|
 const result=await consumeLoginCode('code:'+emailKey(email),codeHash(email,code),now);
 if(result==='invalid')return json({error:'验证码无效或已过期，请重新获取'},400);
 if(result==='incorrect')return json({error:'验证码不正确'},401);
-return Response.json({ok:true},{headers:{'Set-Cookie':await sessionCookie(req,userIdFor(email)),'Cache-Control':'no-store'}});
+const uid=userIdFor(email);await recordUserLogin(uid,email,now);
+return Response.json({ok:true},{headers:{'Set-Cookie':await sessionCookie(req,uid),'Cache-Control':'no-store'}});
 }catch{return json({error:'暂时无法登录，请稍后重试'},503);}
 }

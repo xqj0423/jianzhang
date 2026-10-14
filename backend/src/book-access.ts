@@ -9,7 +9,7 @@ function macSync(s:string){const key=vars().BOOK_SESSION_KEY;if(!key)throw Error
 function cookieName(req:Request){return new URL(req.url).protocol==='https:'?'__Host-jianzhang':'jianzhang-dev';}
 
 // ---- users -------------------------------------------------------------
-// A user id is derived from the email, so no user table is needed.
+// A user id is derived from the email; verified login metadata lives in the access collection.
 // The OWNER_EMAIL account maps to the special id "owner" = the existing ledger document.
 const UID=/^(owner|[a-f0-9]{24})$/;
 export function normalizeEmail(s:unknown):string|null{if(typeof s!=='string')return null;const e=s.trim().toLowerCase();return e.length<=254&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)?e:null;}
