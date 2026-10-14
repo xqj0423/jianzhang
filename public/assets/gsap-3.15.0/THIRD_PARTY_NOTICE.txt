@@ -1,0 +1,1 @@
+GSAP and ScrollTrigger 3.15.0, Copyright GreenSock.\nOfficial repository: https://github.com/greensock/GSAP\nLicense: https://gsap.com/standard-license/\nThe original distribution license headers are retained, and the scripts are unmodified.\nPackage registry integrity and file hashes: provenance.json\n

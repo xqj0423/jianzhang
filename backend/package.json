@@ -1,0 +1,21 @@
+{
+  "name": "jianzhang-cloudbase-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node --env-file=.env.local server.mjs",
+    "start:cloud": "node server.mjs",
+    "test:auth": "node --test test/auth.test.mjs"
+  },
+  "dependencies": {
+    "@cloudbase/node-sdk": "3.18.3"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

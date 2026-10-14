@@ -1,0 +1,225 @@
+{
+  "files": [
+    {
+      "file": ".env.example",
+      "bytes": 46,
+      "sha256": "b4543d733647eff4ad60c7e3f155e50a21d32986b09b8ce0e813bdfa47d603b2"
+    },
+    {
+      "file": ".gitignore",
+      "bytes": 540,
+      "sha256": "54246c1aa4854f9d4f9d66740b0bc082b09a21332c1194f847dc63c112f63e14"
+    },
+    {
+      "file": ".vercelignore",
+      "bytes": 313,
+      "sha256": "de0691f4be092303fa60efd8370e3bd757f8c7a6dee2e39e2ebe6737bfcb17f4"
+    },
+    {
+      "file": "README.md",
+      "bytes": 7363,
+      "sha256": "e308bb29d68e56c495149f26342a5d9414b7bf6ab57674b479aba3cfa062b875"
+    },
+    {
+      "file": "api/index.mjs",
+      "bytes": 306,
+      "sha256": "0525d14e11053ca714fdcc0b7aeae91d229b509152b5c99e2917aa4a3ac2d590"
+    },
+    {
+      "file": "backend/.env.example",
+      "bytes": 306,
+      "sha256": "0f8c73156e324e52d75b3c811ba96c61f738028822bbb7a8247f6d5170f30029"
+    },
+    {
+      "file": "backend/build.mjs",
+      "bytes": 418,
+      "sha256": "4cd3d34ec44e19612bb0dc03d274107ae9463635fc2e0b7a76a449d3b69c53a2"
+    },
+    {
+      "file": "backend/package.json",
+      "bytes": 471,
+      "sha256": "f9fe605ea56f67f92ac29e63159829f6b8cbf5a3040c71112763de9c00699614"
+    },
+    {
+      "file": "backend/scf_bootstrap",
+      "bytes": 46,
+      "sha256": "4bdfacaf37eb4448ee428f7f4a09924304e45563a2abe641fd6812b0455fe908"
+    },
+    {
+      "file": "backend/src/api/capture/route.ts",
+      "bytes": 1664,
+      "sha256": "8766160af006f6cee4764aeac97fd46a6a8d52c48c17c15f54cc1060e9a6e851"
+    },
+    {
+      "file": "backend/src/api/lock/route.ts",
+      "bytes": 312,
+      "sha256": "cdd3a818db126f018f79d404df3bbd7507eb4a4dd8d0c1d89abb40a3c5ba82f9"
+    },
+    {
+      "file": "backend/src/api/recognize/route.ts",
+      "bytes": 567,
+      "sha256": "2ca710eef7a6217ea27fffbadd2cf7e218614a3ed676e2ee82fdbfad517d0548"
+    },
+    {
+      "file": "backend/src/api/record/route.ts",
+      "bytes": 3622,
+      "sha256": "e1cc820d90572a1c76d89be0f1cdc42a5de62ff9ad19a22b26be68183dee012c"
+    },
+    {
+      "file": "backend/src/api/shortcut-config/route.ts",
+      "bytes": 774,
+      "sha256": "2ecbfb98d9f0ed5586e2cf2f4be96b64f928cceba9a77e2e62b0c2a73f77960d"
+    },
+    {
+      "file": "backend/src/api/state/route.ts",
+      "bytes": 1106,
+      "sha256": "38b046f69229b43bfa076b83f0477a110bf0a2c7c254edb0d3ff3782d27ea563"
+    },
+    {
+      "file": "backend/src/api/unlock/route.ts",
+      "bytes": 1200,
+      "sha256": "e2e50c461627ffc441f620ff9f545dd4e3bcadcb4125d57c249a2fad33926af1"
+    },
+    {
+      "file": "backend/src/book-access.ts",
+      "bytes": 4281,
+      "sha256": "0ffae21e592270b1bbb0e83c4fbc424d436b68516138bea00ec411ed9cdcc0c6"
+    },
+    {
+      "file": "backend/src/cloud-env.ts",
+      "bytes": 32,
+      "sha256": "ba39b405ecd7fcf78f19b902e63a602b3c93473da1bd32dd600448b19c7a5323"
+    },
+    {
+      "file": "backend/src/database.ts",
+      "bytes": 2296,
+      "sha256": "72d080d83f6dfb619ccd442a49b5d2e7326188d5c11ad9e3b12b5c3be43643e0"
+    },
+    {
+      "file": "backend/src/ledger-store.ts",
+      "bytes": 2874,
+      "sha256": "d0c382d0137f929221dfd8f6b9734888c4a33c6768c875c44a583e47493ac269"
+    },
+    {
+      "file": "backend/src/recognize.ts",
+      "bytes": 8518,
+      "sha256": "ab278169a183850ad06da3e59d05fc8cf7e8d05adffde4b68aa99cebf7fd922c"
+    },
+    {
+      "file": "backend/src/route.ts",
+      "bytes": 614,
+      "sha256": "e47797f68707a99704242cb7c50d4dd896c9b59a3c2d7abaa616dcb64c79d7cb"
+    },
+    {
+      "file": "backend/src/server.ts",
+      "bytes": 3775,
+      "sha256": "eb96af024269ec16e2ed1504321880312f94648533dc91fee4c3ec54debee961"
+    },
+    {
+      "file": "backend/src/shortcut-help/route.ts",
+      "bytes": 2450,
+      "sha256": "1ba0fc764dca1bfd885225ef0779c3eabe54967aa44f5ad5a3b2f7252ea88357"
+    },
+    {
+      "file": "backend/test/auth.test.mjs",
+      "bytes": 1363,
+      "sha256": "3164d1fed452f0bbd3771fc28956698a267d8002a672f1889ba0dfe7a95c3d49"
+    },
+    {
+      "file": "data/ledger.html",
+      "bytes": 84916,
+      "sha256": "b6c84a30edaf136858f11aed391bff36270e41feede4af62de5838e9b8386fe8"
+    },
+    {
+      "file": "docs/上传前检查清单.md",
+      "bytes": 3067,
+      "sha256": "46ac712b6652a01b937e6120fae7cc6af3e57efa9ecb2171a4d5d7eca6a04a3d"
+    },
+    {
+      "file": "docs/敏感内容检查报告.md",
+      "bytes": 4575,
+      "sha256": "6ac52370b20cb5d745f043c4ebe34309413774382178b8140479be21f27ce786"
+    },
+    {
+      "file": "docs/文件结构.md",
+      "bytes": 1592,
+      "sha256": "d2827c300ef2891adfdef343c118382f295188bfc80a149f944c8a8597efbed0"
+    },
+    {
+      "file": "lib/handler.mjs",
+      "bytes": 5309,
+      "sha256": "7b55d5118c2423b5327385ea116445382ad0890061e8bd3d2e5bf3f93a9aa029"
+    },
+    {
+      "file": "package.json",
+      "bytes": 312,
+      "sha256": "637d7be077b2d9587f56de3746e24dd76d28dc11dc28f5d80ad88b8708ee29b9"
+    },
+    {
+      "file": "public/assets/gsap-3.15.0/ScrollTrigger.min.js",
+      "bytes": 44575,
+      "sha256": "b0b14d67b55b0c43c756ac0b106cfcb09d0879945f6ead64451065b0672916a2"
+    },
+    {
+      "file": "public/assets/gsap-3.15.0/THIRD_PARTY_NOTICE.txt",
+      "bytes": 304,
+      "sha256": "5f0663b897793e986f2830387a108d3f0e4f82da6d8100c07bf5f41edcc6bd02"
+    },
+    {
+      "file": "public/assets/gsap-3.15.0/gsap.min.js",
+      "bytes": 72927,
+      "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+    },
+    {
+      "file": "public/assets/gsap-3.15.0/provenance.json",
+      "bytes": 432,
+      "sha256": "6462cd944c65e3b3a646553907c7af35e338c9b1cc49c1447d0a10bea629df3c"
+    },
+    {
+      "file": "public/assets/ledger-motion-v4.js",
+      "bytes": 4744,
+      "sha256": "b69ff79f4ca7b000b31d97f2838f0a6082df7aaa07a48a339729862ab0e5ce72"
+    },
+    {
+      "file": "scripts/check-public.mjs",
+      "bytes": 1863,
+      "sha256": "50a547ff6769e40ffdfcaaff7bb76cfb7161c24619eb021b1b6a3f1e19dc0615"
+    },
+    {
+      "file": "scripts/dev.mjs",
+      "bytes": 1372,
+      "sha256": "c1e929b9b1438061592dbee3626c018719c1340e7bdfc40f7bdccf824b00ce34"
+    },
+    {
+      "file": "shortcut/.env.example",
+      "bytes": 22,
+      "sha256": "fe1524375cd926bca0a4de792a51be294d498cdc33a3bede978eeafd85e6ebb9"
+    },
+    {
+      "file": "shortcut/README.md",
+      "bytes": 710,
+      "sha256": "443f5ac5dbd72dd8c10e06784fc79fcf499211e94393ccf749247cfeb524480f"
+    },
+    {
+      "file": "shortcut/build.py",
+      "bytes": 6348,
+      "sha256": "0b6457777c7331f41e1180312f6956d60b2af5a72eb91b07ff14f78eb985368e"
+    },
+    {
+      "file": "test/handler.test.mjs",
+      "bytes": 5103,
+      "sha256": "7077ce9240078ee679f798c42a71a8be71f9d10b715162e70f1019e5a912d1ed"
+    },
+    {
+      "file": "test/public-config.test.mjs",
+      "bytes": 1901,
+      "sha256": "e2ea112df5e8d406ed115545ed3ca16da78d1636ce1740dded8d21c55efddfd8"
+    },
+    {
+      "file": "vercel.json",
+      "bytes": 751,
+      "sha256": "a3bf40616033285f1ae4d7adf1ee94e1f4995b4312dd6b8abb5eede61a54a735"
+    }
+  ],
+  "note": "此清单不对自身做循环校验"
+}

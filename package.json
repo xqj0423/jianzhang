@@ -1,0 +1,14 @@
+{
+  "name": "jianzhang",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "audit:public": "node scripts/check-public.mjs",
+    "dev": "node --env-file=.env.local scripts/dev.mjs"
+  }
+}
