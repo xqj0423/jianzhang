@@ -10,8 +10,8 @@ export function validRow(r:any):r is Row {
   return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,19).replace('T',' ')===r.date&&['party','note','category','source','tx'].every(k=>typeof r[k]==='string'&&r[k].length<=2000);
 }
 export function validLedger(v:any):v is Ledger{return v?.version===1&&Number.isSafeInteger(v.initial)&&Math.abs(v.initial)<=100000000000&&Array.isArray(v.rows)&&v.rows.length<=30000&&v.rows.every(validRow)&&new Set(v.rows.map((r:Row)=>r.id)).size===v.rows.length;}
-export async function readLedger(){const snapshot=await readSnapshot(empty);return {...snapshot,db:normalizeLedgerCategories(snapshot.db)};}
-export async function writeLedger(db:Ledger,revision:number){return writeSnapshot(normalizeLedgerCategories(db),revision);}
+export async function readLedger(uid:string){const snapshot=await readSnapshot(uid,empty);return {...snapshot,db:normalizeLedgerCategories(snapshot.db)};}
+export async function writeLedger(uid:string,db:Ledger,revision:number){return writeSnapshot(uid,normalizeLedgerCategories(db),revision);}
 export function sameOrigin(req:Request){const origin=req.headers.get('origin');return !!origin&&origin===new URL(req.url).origin;}
 export function classify(t:string,type:string){
  if(/退款|退货/.test(t))return '退款';

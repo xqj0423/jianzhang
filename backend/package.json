@@ -10,7 +10,7 @@
     "build": "node build.mjs",
     "start": "node --env-file=.env.local server.mjs",
     "start:cloud": "node server.mjs",
-    "test:auth": "node --test test/auth.test.mjs"
+    "test:auth": "node --test test/multiuser.test.mjs"
   },
   "dependencies": {
     "@cloudbase/node-sdk": "3.18.3"

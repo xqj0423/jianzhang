@@ -45,7 +45,7 @@ npm run dev
 | 变量 | 用途 |
 |---|---|
 | `LEDGER_UPSTREAM_ORIGIN` | 实际已有账目后端的 HTTPS 来源地址，不能包含路径、账号或密码；缺失会停止启动 |
-| `BOOK_PUBLIC_ACCESS` | `true` 使用当前网站的免密码模式；其他值将首页转发至后端的访问控制页面 |
+| `BOOK_PUBLIC_ACCESS` | 多用户版本必须删除或设为 `false`，让首页转发至后端的邮箱登录页面 |
 
 测试使用 `*.example` 合成地址，并以模拟后端检查行为，不读写真实账目。
 
@@ -62,10 +62,12 @@ npm run dev
 | `TENCENTCLOUD_SECRETID` / `TENCENTCLOUD_SECRETKEY` / `TENCENTCLOUD_SESSIONTOKEN` | 可选服务端凭据方式；优先使用平台提供的运行身份或受限服务端凭据 |
 | `PUBLIC_ORIGIN` | 腾讯云后端自己的 HTTPS 来源地址 |
 | `PORT` | 后端监听端口；默认 9000 |
-| `BOOK_PUBLIC_ACCESS` | 要保持现有免密码行为，Vercel 和后端均设置为 `true`；不设置时后端要求有效登录会话 |
-| `BOOK_PASSWORD` | 自行配置的账本密码，保留已有值，不能放入仓库 |
-| `BOOK_SESSION_KEY` | 会话签名密钥，保留已有值；改变会使旧会话失效 |
-| `SHORTCUT_WRITE_TOKEN` | 保留已有快捷指令令牌；改变会使已安装指令的连接配置失效 |
+| `BOOK_PUBLIC_ACCESS` | 多用户版本必须删除或设为 `false`；后端检测到 `true` 会停止启动 |
+| `OWNER_EMAIL` | 你的邮箱，必填；该邮箱登录映射到现有账本，其他邮箱独立建账 |
+| `RESEND_API_KEY` | Resend 服务端邮件 API 密钥，不提交仓库 |
+| `MAIL_FROM` | Resend 已验证域名的发件人地址 |
+| `BOOK_SESSION_KEY` | 会话和用户身份签名密钥，必须保留已有值；更换会改变其他用户的账本 ID，并使会话、个人快捷指令令牌失效 |
+| `SHORTCUT_WRITE_TOKEN` | 可选旧快捷指令令牌，保留后继续写入你的原账本；新用户从自己的登录会话生成独立令牌 |
 | `SHORTCUT_FILE_PATH` | 已签名工作流的服务器绝对路径；文件由私密部署资产提供，不提交 GitHub |
 | `LEDGER_COLLECTION` | 默认 `jianzhang_ledger`；沿用已有集合 |
 | `LEDGER_DOCUMENT_ID` | 默认 `main`；沿用已有文档 |
@@ -107,8 +109,21 @@ python shortcut/build.py
 
 只上传这个准备目录，不上传整个工作区。`.env.example` 仅包含空的变量赋值，没有任何真实值；所有本地环境文件、导出的 CSV/XLSX、数据库、备份、快捷指令二进制、签名材料、云 CLI 配置均被排除。
 
-公开源代码不等于账目私有。当前免密码模式允许拿到网站地址的人访问账目；需要私人账本时，应使用后端登录模式，并保持 Vercel/后端设置一致。本准备版没有修改线上访问模式。
+公开源代码不等于账目私有。这个分支采用邮箱验证码登录和独立账本；Vercel 与后端均关闭公开访问。这里只修改源码，尚未修改线上环境变量或部署。
 
 `.gitignore` 不会删除已经提交到历史中的秘密。若以前已公开过密钥或账目，应撤销/轮换相关凭据并清理历史，再公开；不能只删除当前文件。
 
 第三方 GSAP 的许可声明随资源保留，自有代码的开源许可证由项目所有者另行决定。上传前执行 [docs/上传前检查清单.md](docs/上传前检查清单.md)。
+
+## 多用户邮箱登录上线步骤
+
+本次实现以 CHANGES.md 为基础。旧密码接口已移除，旧密码 cookie 需要重新登录；新会话保存一年。
+
+1. 在现有网站导出并妥善保存账本备份，不能把备份提交到 GitHub。
+2. 在 Resend 添加你的域名，按它提供的记录验证 SPF / DKIM，配置 `RESEND_API_KEY` 和 `MAIL_FROM`。
+3. 腾讯云设置 `OWNER_EMAIL` 为自己的邮箱，保留 `BOOK_SESSION_KEY`、旧 `SHORTCUT_WRITE_TOKEN` 和原数据库环境、集合、文档。默认你的账本仍是 `jianzhang_ledger/main`；其他用户使用 `u_<uid>` 文档。不要重建或清空数据库。
+4. 腾讯云删除 `BOOK_PASSWORD`，删除 `BOOK_PUBLIC_ACCESS` 或设为 `false`；Vercel 同样关闭 `BOOK_PUBLIC_ACCESS`。
+5. 先用隔离数据库测试后端及 Vercel 预览。生产数据库不得用于新邮箱、写入或错误验证码测试。确认自己的邮箱能打开旧账本、新邮箱账本为空、互不可见，旧快捷指令仍写入原账本。
+6. 两端分别按现有流程发布；Vercel 的 Git 部署不会发布腾讯云后端。缺少邮件配置或有效 `OWNER_EMAIL` 时，新后端会停止启动。
+
+验证码仅保存签名摘要，10 分钟有效。验证和尝试计数使用同一数据库事务，成功一次后即失效。测试使用内存数据库与模拟邮件，不接触线上数据。

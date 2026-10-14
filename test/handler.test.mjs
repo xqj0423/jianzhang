@@ -16,7 +16,7 @@ test('state GET preserves original revision and complete ledger',async()=>{
 });
 test('cross-origin or absent-origin writes are rejected before forwarding',async()=>{
  let calls=0;const handle=setup(async()=>{calls++;return Response.json({saved:true});});
- for(const path of ['/api/state','/api/shortcut-config','/api/unlock','/api/lock'])for(const origin of [undefined,'https://wrong.example']){
+ for(const path of ['/api/state','/api/shortcut-config','/api/login-request','/api/login-verify','/api/lock'])for(const origin of [undefined,'https://wrong.example']){
    const response=await handle(new Request(host+path,{method:path==='/api/state'?'PUT':'POST',headers:origin?{origin}:{},body:'{}'}));assert.equal(response.status,403);
  }
  assert.equal(calls,0);
