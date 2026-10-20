@@ -1,3 +1,9 @@
 #!/bin/bash
+set -e
 cd /var/user
+for node_bin in /var/lang/node22/bin/node /var/lang/node20/bin/node; do
+  if [ -x "$node_bin" ]; then
+    exec "$node_bin" server.mjs
+  fi
+done
 exec node server.mjs
