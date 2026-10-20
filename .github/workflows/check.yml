@@ -1,0 +1,30 @@
+name: Ledger checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Frontend regressions and proxy tests
+        run: npm test
+      - name: Install backend dependencies
+        run: npm --prefix backend install --no-audit --no-fund
+      - name: Authentication and ledger isolation tests
+        run: npm --prefix backend run test:auth
+      - name: Build backend with the updated page
+        run: npm --prefix backend run build
+      - name: Audit the public source archive
+        run: |
+          mkdir -p "$RUNNER_TEMP/ledger-source-audit"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/ledger-source-audit"
+          cd "$RUNNER_TEMP/ledger-source-audit"
+          node scripts/check-public.mjs

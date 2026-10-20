@@ -155,3 +155,18 @@ test('user directory is owner-only, paginated, read-only and never returns ledge
  for(const user of seen)assert.deepEqual(Object.keys(user).sort(),['email','firstRecordedAt','isOwner','lastLoginAt'].sort());
  assert.deepEqual([...documents],snapshot);
 });
+
+test('resume upgrades an existing signed session without touching ledgers; invalid sessions cannot renew',async()=>{
+ const before=structuredClone([...documents]);
+ const oldCookie=await cookie(alice);
+ const response=await account.GET(new Request(origin+'/api/account?resume=1',{headers:{cookie:oldCookie}}));
+ assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
+ const renewed=response.headers.get('set-cookie');
+ for(const attribute of ['SameSite=Lax','HttpOnly','Secure','Path=/','Max-Age=31536000'])assert.ok(renewed.includes(attribute),attribute);
+ assert.equal(await auth.bookAccess(new Request(origin,{headers:{cookie:renewed.split(';')[0]}})),alice);
+ const anonymous=await account.GET(new Request(origin+'/api/account?resume=1'));
+ assert.equal(anonymous.status,401);assert.equal(anonymous.headers.get('set-cookie'),null);
+ const forged=await account.GET(new Request(origin+'/api/account?resume=1',{headers:{cookie:oldCookie.replace(alice,bob)}}));
+ assert.equal(forged.status,401);assert.equal(forged.headers.get('set-cookie'),null);
+ assert.deepEqual([...documents],before);
+});
