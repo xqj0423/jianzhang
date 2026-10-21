@@ -38,6 +38,13 @@ export const authCases=[
   await f.api.sendCode();check(f.element('resend').disabled,'resend ignores cooldown');check(!f.element('f2').hidden,'verification form missing');
   f.element('code').value='123456';f.clock.now+=61000;f.api.updateCooldown();check(!f.element('resend').disabled,'resend stays disabled after cooldown');
   await f.api.sendCode();check(f.calls.filter(c=>c.url==='/api/login-request').length===2,'resend did not send another request');check(f.element('code').value==='','stale code retained after resend');
+ }],
+ ['successful code request marks the status message as ok and a later failure clears it',async source=>{
+  check(source.includes('rel="icon"'),'login page has no favicon');
+  const f=loginFixture(source);await f.api.checkSession();f.element('email').value='fixture@example.com';
+  await f.api.sendCode();check(f.element('msg').className==='ok','success message not marked ok');check(f.element('msg').textContent.includes('fixture@example.com'),'success message missing email');
+  f.server.offline=true;f.clock.now+=61000;f.api.updateCooldown();await f.api.sendCode();
+  check(f.element('msg').className!=='ok','failed request kept the ok styling');
  }]
 ];
 export async function runAuthRegressions(source){
