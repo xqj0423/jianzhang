@@ -57,6 +57,13 @@ export const uiCases=[
   check(element('preview').innerHTML.includes('fixture-formula'),'late issue omitted from filtered preview');
   const csv=api.importIssuesCsv();check(csv.split('\r\n').length===31,'download omitted skipped rows');check(csv.includes("'=fixture-formula"),'CSV formula prefix was not neutralized');
   check(!element('downloadImportIssues').disabled,'issue download disabled');
+ }],
+ ['ledger page declares an inline favicon',async html=>{
+  check(html.includes('rel="icon"'),'ledger page has no favicon');check(html.includes('data:image/svg+xml'),'favicon is not an inline SVG');
+ }],
+ ['entry category options are escaped like every other category rendering',async html=>{
+  check(html.includes("cats.map(c=>'<option>'+esc(c)+'</option>')"),'entry category options are not escaped');
+  check(!html.includes("'<option>'+c+'</option>'"),'unescaped category option remains');
  }]
 ];
 export async function runUiRegressions(html){

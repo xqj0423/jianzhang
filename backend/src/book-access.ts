@@ -45,11 +45,11 @@ return constantEqual(t,shortcutToken(uid))?uid:null;
 export async function rateKey(req:Request){return mac('ip:'+(req.headers.get('x-jianzhang-client-ip')||'unknown'));}
 
 export const unlockHtml=`<!doctype html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><title>简账 · 登录</title><meta name="theme-color" content="#24705a">
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><title>简账 · 登录</title><meta name="theme-color" content="#24705a"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2324705a'/%3E%3Ccircle cx='50' cy='50' r='27' fill='none' stroke='white' stroke-width='7'/%3E%3Cpath d='M50 23a27 27 0 0 1 0 54z' fill='white'/%3E%3C/svg%3E">
 <style>
-:root{color-scheme:light dark;--bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--secondary:#62626b;--line:#cdd7d1;--brand:#24705a;--error:#a13324}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--card:#2c2c2e;--text:#fff;--secondary:#b0b0ba;--line:#5c635e;--error:#ff9c8e}}
-*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:24px}.box{width:100%;max-width:440px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px}h1{font-size:27px;line-height:1.3;margin:20px 0 12px}p{color:var(--secondary);font-size:14px}input,button{width:100%;font:inherit;padding:12px;border-radius:9px;border:1px solid var(--line);margin:8px 0;min-height:48px}input{background:var(--bg);color:var(--text)}button{background:var(--brand);color:white;cursor:pointer}button:disabled{opacity:.55;cursor:default}.secondary{background:transparent;color:var(--text)}#msg{color:var(--error);min-height:22px}small{color:var(--secondary);font-size:13px}input:focus-visible,button:focus-visible{outline:3px solid var(--brand);outline-offset:3px}#sessionStatus{min-height:22px}
+:root{color-scheme:light dark;--bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--secondary:#62626b;--line:#cdd7d1;--brand:#24705a;--error:#a13324;--ok:#24705a}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--card:#2c2c2e;--text:#fff;--secondary:#b0b0ba;--line:#5c635e;--error:#ff9c8e;--ok:#75bea5}}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:24px}.box{width:100%;max-width:440px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px}h1{font-size:27px;line-height:1.3;margin:20px 0 12px}p{color:var(--secondary);font-size:14px}input,button{width:100%;font:inherit;padding:12px;border-radius:9px;border:1px solid var(--line);margin:8px 0;min-height:48px}input{background:var(--bg);color:var(--text)}button{background:var(--brand);color:white;cursor:pointer}button:disabled{opacity:.55;cursor:default}.secondary{background:transparent;color:var(--text)}#msg{color:var(--error);min-height:22px}#msg.ok{color:var(--ok)}small{color:var(--secondary);font-size:13px}input:focus-visible,button:focus-visible{outline:3px solid var(--brand);outline-offset:3px}#sessionStatus{min-height:22px}
 </style></head><body><main class="box"><b>◒ 简账</b><h1>登录你的账本</h1><p>输入邮箱，我们会发送一个验证码。首次登录会自动创建独立账本。</p><p id="sessionStatus" role="status">正在检查这台设备的登录状态…</p>
 <form id="f1"><label for="email">邮箱</label><input id="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required maxlength="254"><button id="b1">发送验证码</button></form>
 <form id="f2" hidden><label for="code">6 位验证码</label><input id="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required><button id="b2">登录</button><button type="button" class="secondary" id="resend" disabled>重新发送验证码</button><button type="button" class="secondary" id="back">换一个邮箱</button></form>
@@ -57,7 +57,7 @@ export const unlockHtml=`<!doctype html>
 <script>
 var $=function(id){return document.getElementById(id)};
 var email='',resendAt=0,sending=false,checking=null;
-function say(text){$('msg').textContent=text}
+function say(text,ok){var m=$('msg');m.textContent=text;m.className=ok?'ok':''}
 async function post(url,body){
  var control=new AbortController(),timer=setTimeout(function(){control.abort()},15000);
  try{
@@ -81,7 +81,7 @@ async function sendCode(){
   await post('/api/login-request',{email:target});
   email=target;resendAt=Date.now()+60000;
   $('f1').hidden=true;$('f2').hidden=false;$('code').value='';$('code').focus();
-  say('验证码已发送到 '+email+'，10 分钟内有效。收不到请查看垃圾邮件箱。');
+  say('验证码已发送到 '+email+'，10 分钟内有效。收不到请查看垃圾邮件箱。',true);
  }catch(error){
   if(error.status===429)resendAt=Date.now()+60000;
   say(error.name==='AbortError'?'连接超时，请稍后重试':error.message);
