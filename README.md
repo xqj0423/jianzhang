@@ -45,7 +45,7 @@ npm run dev
 | 变量 | 用途 |
 |---|---|
 | `LEDGER_UPSTREAM_ORIGIN` | 实际已有账目后端的 HTTPS 来源地址，不能包含路径、账号或密码；缺失会停止启动 |
-| `BOOK_PUBLIC_ACCESS` | 多用户版本必须删除或设为 `false`，让首页转发至后端的邮箱登录页面 |
+| `BOOK_PUBLIC_ACCESS` | 多用户版本必须删除或设为 `false`，让首页转发至后端的邮箱登录页面；检测到 `true` 会停止启动 |
 
 测试使用 `*.example` 合成地址，并以模拟后端检查行为，不读写真实账目。
 
@@ -75,11 +75,13 @@ npm run dev
 
 ```bash
 cd backend
-npm install
+npm ci
 npm run build
 npm run test:auth
 npm start
 ```
+
+`backend/package-lock.json` 锁定后端直接及间接依赖；本地构建和 CI 使用 `npm ci`。需要升级依赖时，更新锁文件并运行完整测试后再提交。
 
 `build.mjs` 只由页面模板生成 `src/ledger-html.ts`、编译后端并复制公开动画资源，不读取或复制私密 `.env`。这些生成文件被 `.gitignore` 排除。`scf_bootstrap` 保留腾讯云 HTTP 函数启动入口；在云函数中使用 `npm run start:cloud` 或该入口，由平台提供环境变量。不要把新环境/新集合的空账本覆盖到现有账本。
 
