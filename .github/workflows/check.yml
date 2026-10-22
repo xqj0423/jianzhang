@@ -17,7 +17,7 @@ jobs:
       - name: Frontend regressions and proxy tests
         run: npm test
       - name: Install backend dependencies
-        run: npm --prefix backend install --no-audit --no-fund
+        run: npm --prefix backend ci --no-audit --no-fund
       - name: Authentication and ledger isolation tests
         run: npm --prefix backend run test:auth
       - name: Build backend with the updated page

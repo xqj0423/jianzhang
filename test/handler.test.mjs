@@ -2,17 +2,19 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createHandler} from '../lib/handler.mjs';
 const host='https://jianzhang.example',upstream='https://upstream.example';
-const setup=(fetchImpl)=>createHandler({html:'<html>ledger</html>',shortcut:new Uint8Array([65,69,65,49]),upstream,fetchImpl,publicAccess:true});
+const setup=(fetchImpl)=>createHandler({html:'<html>ledger</html>',shortcut:new Uint8Array([65,69,65,49]),upstream,fetchImpl,publicAccess:false});
 
 test('owner directory proxy forwards pagination and cookie; preserves forbidden response',async()=>{
  const handle=setup(async(url,options)=>{assert.equal(String(url),upstream+'/api/admin/users?after=owner&limit=30');assert.equal(options.headers.get('cookie'),'fixture-cookie');return Response.json({error:'forbidden'},{status:403});});
  const response=await handle(new Request(host+'/api/index?__route=/api/admin/users&after=owner&limit=30&unsafe=ignored',{headers:{cookie:'fixture-cookie'}}));assert.equal(response.status,403);assert.equal(response.headers.get('cache-control'),'no-store');
 });
-test('homepage and signed shortcut are served locally; no database request',async()=>{
- const handle=setup(()=>{throw Error('Must not fetch');});
+test('homepage is fetched from authenticated backend; signed shortcut remains local',async()=>{
+ let calls=0;
+ const handle=setup(async(url)=>{calls++;assert.equal(String(url),upstream+'/');return new Response('<html>login</html>',{headers:{'Content-Security-Policy':"default-src 'self'"}});});
  const home=await handle(new Request(host+'/api/index?__route=/'));
- assert.equal(home.status,200);assert.equal(await home.text(),'<html>ledger</html>');assert.match(home.headers.get('content-security-policy'),/connect-src 'self'/);
+ assert.equal(home.status,200);assert.equal(await home.text(),'<html>login</html>');assert.equal(home.headers.get('content-security-policy'),"default-src 'self'");
  const download=await handle(new Request(host+'/download/shortcut'));assert.equal(Buffer.from(await download.arrayBuffer()).toString(),'AEA1');
+ assert.equal(calls,1);
 });
 test('state GET preserves original revision and complete ledger',async()=>{
  const snapshot={revision:37,db:{version:1,initial:88,rows:[{id:'existing',cents:902,note:'烤鸭',date:'2026-10-13 12:00:00'}]}};
