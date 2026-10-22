@@ -23,7 +23,7 @@ test('homepage preserves separate cookies and security headers, not arbitrary up
     assert.equal(options.headers.cookie,'fixture=existing');
     assert.equal(options.redirect,'manual');
     assert.equal(options.cache,'no-store');
-    const headers=new Headers({'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'self'",'Referrer-Policy':'no-referrer','Cache-Control':'public','X-Internal-Secret':'not-forwarded'});
+    const headers=new Headers({'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'self'",'Referrer-Policy':'no-referrer','Cache-Control':'public','X-Internal-Secret':'not-forwarded','Content-Disposition':'attachment'});
     headers.append('Set-Cookie',session);
     headers.append('Set-Cookie','fixture=expired; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/; Secure');
     return new Response('login page',{headers});
@@ -37,6 +37,7 @@ test('homepage preserves separate cookies and security headers, not arbitrary up
   assert.equal(response.headers.get('content-security-policy'),"default-src 'self'");
   assert.equal(response.headers.get('referrer-policy'),'no-referrer');
   assert.equal(response.headers.get('x-internal-secret'),null);
+  assert.equal(response.headers.get('content-disposition'),null);
 });
 
 test('homepage and API share same-origin redirect rewriting with query and fragment',async()=>{
