@@ -2,11 +2,11 @@
 const check=(condition,message)=>{if(!condition)throw Error(message);};
 function fixture(html){
  const elements=new Map(),storage=new Map();
- const element=id=>{if(!elements.has(id))elements.set(id,{id,value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,open:false,options:[],dataset:{},style:{},classList:{add(){},remove(){},toggle(){}},setAttribute(){},removeAttribute(){},focus(){},addEventListener(){},showModal(){this.open=true},close(){this.open=false},add(option){this.options.push(option)}});return elements.get(id)};
+ const element=id=>{if(!elements.has(id))elements.set(id,{id,value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,open:false,options:[],dataset:{},style:{},classList:{add(){},remove(){},toggle(){}},setAttribute(){},removeAttribute(){},focus(){this.focused=true},querySelector(){return element("entryClose")},addEventListener(){},showModal(){this.open=true},close(){this.open=false},add(option){this.options.push(option)}});return elements.get(id)};
  const document={readyState:'loading',getElementById:element,addEventListener(){},querySelectorAll:()=>[],querySelector:()=>null,body:{classList:{add(){},remove(){}}}};
  const script=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
  const factory=new Function('document','matchMedia','crypto','localStorage','window','navigator','requestAnimationFrame','cancelAnimationFrame','setTimeout','clearTimeout','Option','structuredClone',script+`
- return {openEntry,submitEntry,confirmDelete,renderDetails,renderTrend,importIssuesCsv:typeof importIssuesCsv==='function'?importIssuesCsv:null,renderImportPreview:typeof renderImportPreview==='function'?renderImportPreview:null,setPlans(v){plans=v},
+ return {openEntry,openDetails,editViewedEntry,submitEntry,confirmDelete,renderDetails,renderTrend,importIssuesCsv:typeof importIssuesCsv==='function'?importIssuesCsv:null,renderImportPreview:typeof renderImportPreview==='function'?renderImportPreview:null,setPlans(v){plans=v},
  configure(v){if(v.db)db=v.db;if(v.month)$('month').value=v.month;if(v.screen)activeScreen=v.screen;ready=true;busy=false;if(v.deleteId)deleteId=v.deleteId;},
  setSave(fn){save=fn},snapshot(){return structuredClone(db)},today:todayCN};
  `);
@@ -19,6 +19,13 @@ function fixture(html){
 const row=()=>({id:'fixture-row',date:'2026-02-12 12:30:37',type:'支出',cents:1234,party:'模拟商户',note:'',category:'餐饮',source:'手动',tx:''});
 const book=rows=>({version:1,initial:0,rows});
 export const uiCases=[
+ ['record details do not open editing or focus the amount',async html=>{
+  const {api,element}=fixture(html);const original=book([row()]);api.configure({db:original,month:'2026-02'});api.openDetails(row());
+  check(element('recordDialog').open,'details did not open');check(!element('entryDialog').open,'editor opened immediately');check(!element('eAmount').focused,'amount received focus');check(element('recordParty').textContent==='模拟商户','details missing party');check(element('recordDate').textContent===row().date,'details changed timestamp');
+  check(html.includes('else openDetails(db.rows.find'),'row click still opens editor');
+  api.editViewedEntry();check(element('entryDialog').open,'explicit edit did not open editor');check(!element('recordDialog').open,'details remained open');check(!element('eAmount').focused,'edit auto-focused amount');check(element('eAmount').value==='12.34','edit changed original amount');check(element('entryClose').focused,'editor has no keyboard-free focus target');
+ }],
+ ['new entries still focus their amount',async html=>{const {api,element}=fixture(html);api.configure({db:book([]),month:'2026-02'});api.openEntry();check(element('eAmount').focused,'new entry did not focus amount');}],
  ['failed deletion can be retried in the same dialog',async html=>{
   const {api,element}=fixture(html);const original=book([row()]);api.configure({db:original,deleteId:'fixture-row',month:'2026-02'});element('deleteDialog').open=true;
   let attempts=0;api.setSave(async()=>{attempts++;if(attempts===1){api.configure({db:book([row()])});return false}return true});
