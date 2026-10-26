@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "node build.mjs",
+    "package": "node package.mjs",
     "start": "node --env-file=.env.local server.mjs",
     "start:cloud": "node server.mjs",
     "test:auth": "node --test test/multiuser.test.mjs"

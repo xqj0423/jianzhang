@@ -45,3 +45,4 @@ ledger-before-*.json
 backend/server.mjs
 backend/src/ledger-html.ts
 backend/assets/
+backend/dist/
